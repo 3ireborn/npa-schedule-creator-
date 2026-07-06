@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NPA Schedule Creator | Bonus Tools</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #111827, #1e293b);
+        color: white;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+    .container {
+        background: rgba(31, 41, 55, 0.95);
+        max-width: 600px;
+        width: 100%;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        border: 1px solid #374151;
+        text-align: center;
+    }
+    h1 {
+        color: #f43f5e;
+        margin-bottom: 5px;
+        font-size: 24px;
+    }
+    p.subtitle {
+        color: #9ca3af;
+        font-size: 14px;
+        margin-bottom: 25px;
+    }
+    .form-group {
+        text-align: left;
+        margin-bottom: 15px;
+    }
+    label {
+        font-size: 13px;
+        color: #a78bfa;
+        font-weight: 600;
+        margin-bottom: 5px;
+        display: block;
+    }
+    input, select {
+        width: 100%;
+        padding: 12px;
+        background: #374151;
+        color: white;
+        border: 1px solid #4b5563;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+    input:focus, select:focus {
+        outline: none;
+        border-color: #8b5cf6;
+    }
+    button {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: transform 0.2s;
+    }
+    button:hover {
+        transform: scale(1.02);
+    }
+    textarea {
+        width: 100%;
+        height: 180px;
+        background: #111827;
+        color: #10b981;
+        border: 1px solid #374151;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+        box-sizing: border-box;
+        font-family: monospace;
+        font-size: 13px;
+        resize: none;
+    }
+    .footer {
+        margin-top: 30px;
+        font-size: 13px;
+        color: #9ca3af;
+    }
+    .footer a {
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+        margin: 10px 0;
+        padding: 8px 15px;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 20px;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .quote-box {
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(245, 158, 11, 0.1);
+        border-left: 4px solid #f59e0b;
+        border-radius: 4px;
+        text-align: left;
+    }
+    .quote-text {
+        font-style: italic;
+        color: #fcd34d;
+        font-size: 13px;
+        margin: 0 0 5px 0;
+    }
+    .quote-author {
+        color: #fbbf24;
+        font-weight: bold;
+        font-size: 12px;
+        margin: 0;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📅 NPA Schedule Creator</h1>
+    <p class="subtitle">Generator Background Jadwal (Resolusi Cetak A4 / AP 230gr)</p>
+    
+    <div class="form-group">
+        <label>Pilih Tema Jadwal</label>
+        <select id="kategori">
+            <option value="anak">📚 Jadwal Pelajaran Anak (Lucu & Edukatif)</option>
+            <option value="bisnis">💼 Jadwal Training Bisnis (Elegan & Profesional)</option>
+            <option value="ibadah">🕋 Jadwal Ibadah/Ramadhan (Spiritual & Estetik)</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label>Judul / Nama Acara (Opsional)</label>
+        <input type="text" id="judul" placeholder="Contoh: Jadwal Pelajaran SD, atau Jadwal BOP">
+    </div>
+    
+    <button id="generateBtn">✨ Generate Prompt Kalender Kosong</button>
+    
+    <textarea id="output" readonly placeholder="Prompt untuk AI Gambar akan muncul di sini... Pastikan Aspect Ratio di AI disetel ke 3:4 (Portrait/Berdiri)."></textarea>
+    
+    <div class="footer">
+        <p>Ingin buat poster promosi & video AI dengan wajah Anda?</p>
+        <a href="https://3ireborn.github.io/npa-smart-system-ai/" target="_blank">🚀 Buka Master Tools: NPA Smart System AI</a>
+        
+        <div class="quote-box">
+            <p class="quote-text">"Bisa karena terbiasa, sukses tercipta karena berani dipaksa keluar dari zona nyaman."</p>
+            <p class="quote-author">- Pakde Sugiarto Kurniawan (Founder NPA)</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const btn = document.getElementById('generateBtn');
+    const output = document.getElementById('output');
+    
+    btn.addEventListener('click', () => {
+        const kat = document.getElementById('kategori').value;
+        const judul = document.getElementById('judul').value || "Jadwal Spesial";
+        let promptTxt = "";
+        
+        const baseSetup = "Aspect Ratio: 3:4 (Printable A4 portrait format). Visual Requirements: Ultra detailed, 8K resolution, printable quality for Art Paper 230gr, high contrast, clean layout.";
+        const negativeSpace = "CRITICAL INSTRUCTION: Create a large, clean, empty NEGATIVE SPACE in the center (like a blank glowing board, an empty elegant paper, or a clean modern frame) for the user to write text later. Do NOT generate any letters, typography, or words inside this empty space.";
+        
+        if(kat === 'anak') {
+            promptTxt = `IMAGE PROMPT FOR KIDS SCHEDULE:\nTheme: ${judul}\n\n${baseSetup}\n\n${negativeSpace}\n\nStyle: Cute 3D Pixar animation style, colorful and cheerful. Decorate the borders around the empty space with adorable astronauts, floating planets, glowing stars, and cute books. Soft bright lighting, joyful atmosphere, high saturation.`;
+        } else if(kat === 'bisnis') {
+            promptTxt = `IMAGE PROMPT FOR BUSINESS SCHEDULE:\nTheme: ${judul}\n\n${baseSetup}\n\n${negativeSpace}\n\nStyle: Modern luxury corporate design. Decorate the borders with elegant gold lines, a subtle glowing futuristic city background, and modern office elements (like a premium coffee cup and a sleek laptop at the bottom corner). Studio lighting, professional and premium executive feel.`;
+        } else if(kat === 'ibadah') {
+            promptTxt = `IMAGE PROMPT FOR ISLAMIC SCHEDULE:\nTheme: ${judul}\n\n${baseSetup}\n\n${negativeSpace}\n\nStyle: Elegant Islamic aesthetic. Decorate the borders with beautiful golden geometric patterns, soft glowing Moroccan lanterns hanging from the top corners, and a subtle silhouette of Masjidil Haram in the bottom background. Golden hour lighting, peaceful, spiritual and majestic atmosphere.`;
+        }
+        
+        output.value = promptTxt;
+        
+        // Auto-copy to clipboard
+        navigator.clipboard.writeText(promptTxt);
+        alert("Prompt berhasil dibuat dan otomatis di-copy! Silakan paste di ChatGPT atau AI Gambar Anda.");
+    });
+</script>
+
+</body>
+</html>

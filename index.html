@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NPA Schedule Creator | Bonus Tools</title>
+<title>NPA Schedule Creator | Pro Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
     body {
@@ -25,20 +26,20 @@
         border-radius: 16px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         border: 1px solid #374151;
-        text-align: center;
     }
     h1 {
         color: #f43f5e;
         margin-bottom: 5px;
         font-size: 24px;
+        text-align: center;
     }
     p.subtitle {
         color: #9ca3af;
         font-size: 14px;
         margin-bottom: 25px;
+        text-align: center;
     }
     .form-group {
-        text-align: left;
         margin-bottom: 15px;
     }
     label {
@@ -80,7 +81,7 @@
     }
     textarea {
         width: 100%;
-        height: 220px;
+        height: 250px;
         background: #111827;
         color: #10b981;
         border: 1px solid #374151;
@@ -92,30 +93,8 @@
         font-size: 13px;
         resize: none;
     }
-    .footer {
-        margin-top: 30px;
-        font-size: 13px;
-        color: #9ca3af;
-    }
-    .quote-box {
-        margin-top: 20px;
-        padding: 15px;
-        background: rgba(245, 158, 11, 0.1);
-        border-left: 4px solid #f59e0b;
-        border-radius: 4px;
-        text-align: left;
-    }
-    .quote-text {
-        font-style: italic;
-        color: #fcd34d;
-        font-size: 13px;
-        margin: 0 0 5px 0;
-    }
-    .quote-author {
-        color: #fbbf24;
-        font-weight: bold;
-        font-size: 12px;
-        margin: 0;
+    .hidden {
+        display: none;
     }
 </style>
 </head>
@@ -123,89 +102,146 @@
 
 <div class="container">
     <h1>📅 NPA Schedule Creator</h1>
-    <p class="subtitle">Generator Background Jadwal (Resolusi Cetak A4 / AP 230gr)</p>
+    <p class="subtitle">Desain Template Jadwal Resolusi Cetak (AP 230gr)</p>
     
     <div class="form-group">
-        <label>Pilih Tema Jadwal</label>
-        <select id="kategori">
-            <option value="anak">📚 Jadwal Pelajaran Anak (Lucu & Edukatif)</option>
-            <option value="bisnis">💼 Jadwal Training Bisnis (Elegan & Profesional)</option>
-            <option value="ibadah">🕋 Jadwal Ibadah/Ramadhan (Spiritual & Estetik)</option>
+        <label>1. Pilih Kategori Utama</label>
+        <select id="kategoriUtama">
+            <option value="sekolah">🏫 Pelajaran Sekolah</option>
+            <option value="bisnis">💼 Bisnis & 3iReborn</option>
+            <option value="ibadah">🕋 Ramadhan & Ibadah</option>
+        </select>
+    </div>
+    
+    <div class="form-group" id="groupSekolah">
+        <label>2. Tingkat Sekolah</label>
+        <select id="subSekolah">
+            <option value="tk">Jadwal Pelajaran TK (Cute & Fun)</option>
+            <option value="sd">Jadwal Pelajaran SD (Adventure/Astronaut)</option>
+            <option value="smp">Jadwal Pelajaran SMP (Cool Anime/Pop)</option>
+            <option value="sma">Jadwal Pelajaran SMA/SMK (Aesthetic/Lo-Fi)</option>
+        </select>
+    </div>
+
+    <div class="form-group hidden" id="groupBisnis">
+        <label>2. Jenis Jadwal Bisnis</label>
+        <select id="subBisnis">
+            <option value="bop">Jadwal Training/BOP (Senin-Ahad)</option>
+            <option value="target">Target Omzet Tahunan (12 Kotak Bulan Kosong)</option>
+            <option value="todo">To-Do List Harian (Kotak Checklist)</option>
+        </select>
+    </div>
+
+    <div class="form-group hidden" id="groupIbadah">
+        <label>2. Jenis Jadwal Ibadah</label>
+        <select id="subIbadah">
+            <option value="imsakiyah">Template Jadwal Imsakiyah (30 Baris Kosong)</option>
+            <option value="mutabaah">Mutaba'ah Yaumiyah (Checklist Ibadah Harian)</option>
         </select>
     </div>
     
     <div class="form-group">
-        <label>Judul / Nama Acara</label>
-        <input type="text" id="judul" value="JADWAL PELAJARAN" placeholder="Contoh: JADWAL PELAJARAN SD">
+        <label>3. Judul / Nama Acara</label>
+        <input type="text" id="judul" value="JADWAL PELAJARAN" placeholder="Contoh: JADWAL PELAJARAN KELAS 5">
+    </div>
+
+    <div class="form-group">
+        <label>4. Pesan Motivasi (Quote di dalam Gambar)</label>
+        <input type="text" id="quoteText" value="Kejarlah mimpimu setinggi bintang di langit!" placeholder="Masukkan pesan singkat untuk di gambar...">
     </div>
     
     <button id="generateBtn">✨ Generate Prompt Jadwal Cetak</button>
     
     <textarea id="output" readonly placeholder="Prompt untuk AI Gambar akan muncul di sini..."></textarea>
     
-    <div class="footer">
-        <p>Tools gratis persembahan dari komunitas digital preneur.</p>
-        
-        <div class="quote-box">
-            <p class="quote-text" id="qText">"Pendidikan adalah tiket menuju masa depan. Semangat belajar meraih cita-cita!"</p>
-            <p class="quote-author" id="qAuthor">- Semangat Edukasi</p>
-        </div>
-    </div>
 </div>
 
 <script>
-    const btn = document.getElementById('generateBtn');
-    const output = document.getElementById('output');
-    const kategoriSelect = document.getElementById('kategori');
-    const qText = document.getElementById('qText');
-    const qAuthor = document.getElementById('qAuthor');
+    const kategoriUtama = document.getElementById('kategoriUtama');
+    const groupSekolah = document.getElementById('groupSekolah');
+    const groupBisnis = document.getElementById('groupBisnis');
+    const groupIbadah = document.getElementById('groupIbadah');
+    const quoteText = document.getElementById('quoteText');
+    const judulInput = document.getElementById('judul');
     
-    // Database Quotes Otomatis
-    const quotesDB = {
-        'anak': {
-            text: '"Pendidikan adalah tiket menuju masa depan. Semangat belajar untuk meraih cita-cita!"',
-            author: '- Semangat Edukasi'
-        },
-        'bisnis': {
-            text: '"Bisa karena terbiasa, sukses tercipta karena berani dipaksa keluar dari zona nyaman."',
-            author: '- Pakde Sugiarto Kurniawan (Founder NPA)'
-        },
-        'ibadah': {
-            text: '"Jadikan setiap ikhtiar dan waktumu sebagai ibadah. InsyaAllah berkah dunia, selamat di akhirat."',
-            author: '- Istikmal Syariah'
-        }
+    // Auto Quotes & Judul based on Category
+    const autoFill = {
+        'sekolah': { j: "JADWAL PELAJARAN", q: "Pendidikan adalah tiket menuju masa depan yang cerah!" },
+        'bisnis': { j: "JADWAL TRAINING 3IREBORN", q: "Sukses tercipta karena berani keluar dari zona nyaman." },
+        'ibadah': { j: "JADWAL IMSAKIYAH", q: "Jadikan setiap ikhtiar sebagai ibadah yang penuh berkah." }
     };
 
-    // Fungsi ganti quote saat dropdown berubah
-    kategoriSelect.addEventListener('change', () => {
-        const kat = kategoriSelect.value;
-        qText.innerText = quotesDB[kat].text;
-        qAuthor.innerText = quotesDB[kat].author;
+    kategoriUtama.addEventListener('change', () => {
+        const val = kategoriUtama.value;
+        // Sembunyikan semua sub
+        groupSekolah.classList.add('hidden');
+        groupBisnis.classList.add('hidden');
+        groupIbadah.classList.add('hidden');
+        
+        // Tampilkan yang dipilih
+        if(val === 'sekolah') groupSekolah.classList.remove('hidden');
+        if(val === 'bisnis') groupBisnis.classList.remove('hidden');
+        if(val === 'ibadah') groupIbadah.classList.remove('hidden');
+
+        // Isi auto teks
+        judulInput.value = autoFill[val].j;
+        quoteText.value = autoFill[val].q;
     });
 
-    btn.addEventListener('click', () => {
-        const kat = kategoriSelect.value;
-        const judul = document.getElementById('judul').value || "JADWAL SPESIAL";
+    document.getElementById('generateBtn').addEventListener('click', () => {
+        const utama = kategoriUtama.value;
+        const judul = document.getElementById('judul').value || "JADWAL";
+        const quote = document.getElementById('quoteText').value || "Tetap Semangat!";
+        let sub = "";
+        
+        if (utama === 'sekolah') sub = document.getElementById('subSekolah').value;
+        if (utama === 'bisnis') sub = document.getElementById('subBisnis').value;
+        if (utama === 'ibadah') sub = document.getElementById('subIbadah').value;
+
         let promptTxt = "";
+        const baseSetup = "Aspect Ratio: 3:4 (Printable A4 portrait format). Visual Requirements: Ultra detailed, 8K resolution, printable quality for Art Paper 230gsm, high contrast, clean poster layout.";
         
-        const baseSetup = "Aspect Ratio: 3:4 (Printable A4 portrait format). Visual Requirements: Ultra detailed, 8K resolution, printable quality for Art Paper 230gr, high contrast, clean layout.";
+        // 1. KATEGORI SEKOLAH (Layout 6 Kotak Shopee Style)
+        if (utama === 'sekolah') {
+            const layoutSchool = `CRITICAL LAYOUT: \n1. TOP: Write the title boldly: "${judul}".\n2. MIDDLE: Draw exactly 6 DISTINCT, SEPARATE blank white rounded panels (arranged in a 3x2 or 2x3 grid) to write the schedule. Above each blank panel, write the days: "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU".\n3. BOTTOM: At the very bottom center of the poster, clearly write the quote: "${quote}".`;
+            
+            if (sub === 'tk') promptTxt = `IMAGE PROMPT (TK SCHEDULE):\n${baseSetup}\n\n${layoutSchool}\n\nStyle: Cute 3D Pixar animation style. Decorate the background and borders with adorable fluffy animals (bunnies, bears), rainbows, and colorful building blocks. Soft pastel lighting, very playful and cheerful atmosphere.`;
+            if (sub === 'sd') promptTxt = `IMAGE PROMPT (SD SCHEDULE):\n${baseSetup}\n\n${layoutSchool}\n\nStyle: 3D Pixar Adventure style. Decorate the background with cute little astronauts, glowing planets, rockets, and floating books in space. Vibrant deep blue and gold colors. Cheerful and imaginative atmosphere.`;
+            if (sub === 'smp') promptTxt = `IMAGE PROMPT (SMP SCHEDULE):\n${baseSetup}\n\n${layoutSchool}\n\nStyle: Cool pop-culture anime/comic style. Decorate the background with dynamic urban elements, skateboards, headphones, and stylish graffiti art elements. Bright energetic colors, youthful and trendy vibe.`;
+            if (sub === 'sma') promptTxt = `IMAGE PROMPT (SMA SCHEDULE):\n${baseSetup}\n\n${layoutSchool}\n\nStyle: Aesthetic lo-fi study room style. Decorate the background with minimalist floating polaroid photos, coffee cups, a glowing neon desk lamp, and indoor plants. Warm sunset lighting, cozy and mature aesthetic vibe.`;
+        } 
         
-        // Instruksi Teks & Grid yang sangat ketat
-        const typographyInstruction = `CRITICAL TYPOGRAPHY & LAYOUT INSTRUCTION:\n1. At the top center of the board, precisely write the title text: "${judul}".\n2. Inside the main board, draw a neat schedule grid/table with horizontal lined rows.\n3. Clearly write the days of the week integrated into the grid rows/columns: "AHAD", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU".\n4. Ensure all spelling is 100% perfectly accurate and legible.`;
-        
-        if(kat === 'anak') {
-            promptTxt = `IMAGE PROMPT FOR KIDS SCHEDULE:\nTheme: ${judul}\n\n${baseSetup}\n\n${typographyInstruction}\n\nStyle: Cute 3D Pixar animation style, colorful and cheerful. Draw a large central board/paper for the schedule. Decorate the borders around the board with adorable astronauts, floating planets, glowing stars, and cute books. Soft bright lighting, joyful atmosphere.`;
-        } else if(kat === 'bisnis') {
-            promptTxt = `IMAGE PROMPT FOR BUSINESS SCHEDULE:\nTheme: ${judul}\n\n${baseSetup}\n\n${typographyInstruction}\n\nStyle: Modern luxury corporate design. Draw a large elegant central board for the schedule. Decorate the borders with elegant gold lines, a subtle glowing futuristic city background, and modern office elements (like a premium coffee cup and a sleek laptop). Studio lighting, professional executive feel.`;
-        } else if(kat === 'ibadah') {
-            promptTxt = `IMAGE PROMPT FOR ISLAMIC SCHEDULE:\nTheme: ${judul}\n\n${baseSetup}\n\n${typographyInstruction}\n\nStyle: Elegant Islamic aesthetic. Draw a large beautiful central parchment/board for the schedule. Decorate the borders with beautiful golden geometric patterns, soft glowing Moroccan lanterns hanging, and a subtle silhouette of Masjidil Haram in the background. Golden hour lighting, peaceful spiritual atmosphere.`;
+        // 2. KATEGORI BISNIS
+        else if (utama === 'bisnis') {
+            if (sub === 'bop') {
+                const layoutBOP = `CRITICAL LAYOUT: \n1. TOP: Write the title: "${judul}".\n2. MIDDLE: Draw an elegant dark schedule table with 7 rows. Write the days on the left side of the rows: "AHAD", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU". Leave the rest of the table blank.\n3. BOTTOM: Clearly write the quote: "${quote}".`;
+                promptTxt = `IMAGE PROMPT (BUSINESS SCHEDULE):\n${baseSetup}\n\n${layoutBOP}\n\nStyle: Modern luxury corporate design. Dark blue and gold accents, glowing futuristic city skyline in the background, sleek laptop and premium coffee cup on a marble desk. Studio lighting.`;
+            }
+            if (sub === 'target') {
+                const layoutTarget = `CRITICAL LAYOUT: \n1. TOP: Write the title: "${judul}".\n2. MIDDLE: Draw exactly 12 blank rectangular boxes (without horizontal lines inside) arranged neatly. Label the boxes from "BULAN 1" to "BULAN 12".\n3. BOTTOM: Clearly write the quote: "${quote}".`;
+                promptTxt = `IMAGE PROMPT (12 MONTHS TARGET):\n${baseSetup}\n\n${layoutTarget}\n\nStyle: Premium executive goal-setting board. Rich dark grey and gold tones. A sophisticated office background with a glowing growth chart hologram. Highly motivational and luxurious.`;
+            }
+            if (sub === 'todo') {
+                const layoutTodo = `CRITICAL LAYOUT: \n1. TOP: Write the title: "${judul}".\n2. MIDDLE: Draw a large elegant blank notepad with multiple blank checkbox circles on the left side for daily tasks.\n3. BOTTOM: Clearly write the quote: "${quote}".`;
+                promptTxt = `IMAGE PROMPT (DAILY TO-DO):\n${baseSetup}\n\n${layoutTodo}\n\nStyle: Minimalist luxury desk setup. A premium leather journal, an expensive fountain pen, and a cup of black coffee. Natural morning sunlight hitting the desk.`;
+            }
+        }
+
+        // 3. KATEGORI IBADAH
+        else if (utama === 'ibadah') {
+            if (sub === 'imsakiyah') {
+                const layoutImsak = `CRITICAL LAYOUT: \n1. TOP: Write the title: "${judul}".\n2. MIDDLE: Draw a large empty table template with exactly 30 blank rows meant for the 30 days of Ramadhan. (Do not write the times, keep the rows empty for the user to write later).\n3. BOTTOM: Clearly write the quote: "${quote}".`;
+                promptTxt = `IMAGE PROMPT (IMSAKIYAH TEMPLATE):\n${baseSetup}\n\n${layoutImsak}\n\nStyle: Majestic Islamic aesthetic. Intricate gold geometric borders, glowing Moroccan lanterns hanging, soft silhouette of a beautiful mosque at sunset. Warm golden hour lighting.`;
+            }
+            if (sub === 'mutabaah') {
+                const layoutMutabaah = `CRITICAL LAYOUT: \n1. TOP: Write the title: "${judul}".\n2. MIDDLE: Draw a clean checklist grid for daily worship routines (like Sholat 5 Waktu, Tilawah, Sedekah). Leave the grid empty.\n3. BOTTOM: Clearly write the quote: "${quote}".`;
+                promptTxt = `IMAGE PROMPT (MUTABAAH CHECKLIST):\n${baseSetup}\n\n${layoutMutabaah}\n\nStyle: Clean, pure, and elegant Islamic design. Emerald green and gold themes. A beautiful Quran and tasbih resting on a table in the background. Soft divine lighting.`;
+            }
         }
         
         output.value = promptTxt;
-        
-        // Auto-copy to clipboard
         navigator.clipboard.writeText(promptTxt);
-        alert("Prompt berhasil dibuat dan otomatis di-copy! Silakan paste di AI Gambar Anda.");
+        alert("Prompt berhasil dibuat dan di-copy! Paste di AI Gambar Anda.");
     });
 </script>
 

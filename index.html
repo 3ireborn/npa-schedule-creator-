@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -108,7 +107,7 @@
         <label>1. Pilih Kategori Utama</label>
         <select id="kategoriUtama">
             <option value="sekolah">🏫 Pelajaran Sekolah</option>
-            <option value="bisnis">💼 Bisnis & 3iReborn</option>
+            <option value="bisnis">💼 Bisnis & Target</option>
             <option value="ibadah">🕋 Ramadhan & Ibadah</option>
         </select>
     </div>
@@ -126,7 +125,6 @@
     <div class="form-group hidden" id="groupBisnis">
         <label>2. Jenis Jadwal Bisnis</label>
         <select id="subBisnis">
-            <option value="bop">Jadwal Training/BOP (Senin-Ahad)</option>
             <option value="target">Target Omzet Tahunan (12 Kotak Bulan Kosong)</option>
             <option value="todo">To-Do List Harian (Kotak Checklist)</option>
         </select>
@@ -135,8 +133,8 @@
     <div class="form-group hidden" id="groupIbadah">
         <label>2. Jenis Jadwal Ibadah</label>
         <select id="subIbadah">
+            <option value="mutabaah">Marketing Langit (Checklist Mutaba'ah)</option>
             <option value="imsakiyah">Template Jadwal Imsakiyah (30 Baris Kosong)</option>
-            <option value="mutabaah">Mutaba'ah Yaumiyah (Checklist Ibadah Harian)</option>
         </select>
     </div>
     
@@ -147,7 +145,7 @@
 
     <div class="form-group">
         <label>4. Pesan Motivasi (Quote di dalam Gambar)</label>
-        <input type="text" id="quoteText" value="Kejarlah mimpimu setinggi bintang di langit!" placeholder="Masukkan pesan singkat untuk di gambar...">
+        <input type="text" id="quoteText" value="Pendidikan adalah tiket menuju masa depan yang cerah!" placeholder="Masukkan pesan singkat untuk di gambar...">
     </div>
     
     <button id="generateBtn">✨ Generate Prompt Jadwal Cetak</button>
@@ -167,23 +165,20 @@
     // Auto Quotes & Judul based on Category
     const autoFill = {
         'sekolah': { j: "JADWAL PELAJARAN", q: "Pendidikan adalah tiket menuju masa depan yang cerah!" },
-        'bisnis': { j: "JADWAL TRAINING 3IREBORN", q: "Sukses tercipta karena berani keluar dari zona nyaman." },
-        'ibadah': { j: "JADWAL IMSAKIYAH", q: "Jadikan setiap ikhtiar sebagai ibadah yang penuh berkah." }
+        'bisnis': { j: "TARGET OMSET TAHUNAN", q: "Sukses tercipta karena berani keluar dari zona nyaman." },
+        'ibadah': { j: "MARKETING LANGIT", q: "Rezeki itu dari Allah. Jadikan setiap ikhtiar sebagai ibadah." }
     };
 
     kategoriUtama.addEventListener('change', () => {
         const val = kategoriUtama.value;
-        // Sembunyikan semua sub
         groupSekolah.classList.add('hidden');
         groupBisnis.classList.add('hidden');
         groupIbadah.classList.add('hidden');
         
-        // Tampilkan yang dipilih
         if(val === 'sekolah') groupSekolah.classList.remove('hidden');
         if(val === 'bisnis') groupBisnis.classList.remove('hidden');
         if(val === 'ibadah') groupIbadah.classList.remove('hidden');
 
-        // Isi auto teks
         judulInput.value = autoFill[val].j;
         quoteText.value = autoFill[val].q;
     });
@@ -201,22 +196,18 @@
         let promptTxt = "";
         const baseSetup = "Aspect Ratio: 3:4 (Printable A4 portrait format). Visual Requirements: Ultra detailed, 8K resolution, printable quality for Art Paper 230gsm, high contrast, clean poster layout.";
         
-        // 1. KATEGORI SEKOLAH (Layout 6 Kotak Shopee Style)
+        // 1. KATEGORI SEKOLAH (6 Panel Bergaris + Space Nama + Karakter Cowok Cewek)
         if (utama === 'sekolah') {
-            const layoutSchool = `CRITICAL LAYOUT: \n1. TOP: Write the title boldly: "${judul}".\n2. MIDDLE: Draw exactly 6 DISTINCT, SEPARATE blank white rounded panels (arranged in a 3x2 or 2x3 grid) to write the schedule. Above each blank panel, write the days: "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU".\n3. BOTTOM: At the very bottom center of the poster, clearly write the quote: "${quote}".`;
+            const layoutSchool = `CRITICAL LAYOUT: \n1. TOP: Write the title boldly: "${judul}".\n2. SUBTITLE SPACE: Leave a clear, empty horizontal gap directly below the title so the user can manually write their "School Name and Academic Year" later.\n3. MIDDLE: Draw exactly 6 DISTINCT, SEPARATE rounded panels (arranged in a 3x2 or 2x3 grid). \n4. INSIDE THE PANELS: Draw neat horizontal ruled lines (straight horizontal writing lines from left to right) inside every panel. Above each panel, write the days: "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU".\n5. BOTTOM: Clearly write the quote: "${quote}".`;
             
-            if (sub === 'tk') promptTxt = `IMAGE PROMPT (TK SCHEDULE):\n${baseSetup}\n\n${layoutSchool}\n\nStyle: Cute 3D Pixar animation style. Decorate the background and borders with adorable fluffy animals (bunnies, bears), rainbows, and colorful building blocks. Soft pastel lighting, very playful and cheerful atmosphere.`;
-            if (sub === 'sd') promptTxt = `IMAGE PROMPT (SD SCHEDULE):\n${baseSetup}\n\n${layoutSchool}\n\nStyle: 3D Pixar Adventure style. Decorate the background with cute little astronauts, glowing planets, rockets, and floating books in space. Vibrant deep blue and gold colors. Cheerful and imaginative atmosphere.`;
-            if (sub === 'smp') promptTxt = `IMAGE PROMPT (SMP SCHEDULE):\n${baseSetup}\n\n${layoutSchool}\n\nStyle: Cool pop-culture anime/comic style. Decorate the background with dynamic urban elements, skateboards, headphones, and stylish graffiti art elements. Bright energetic colors, youthful and trendy vibe.`;
-            if (sub === 'sma') promptTxt = `IMAGE PROMPT (SMA SCHEDULE):\n${baseSetup}\n\n${layoutSchool}\n\nStyle: Aesthetic lo-fi study room style. Decorate the background with minimalist floating polaroid photos, coffee cups, a glowing neon desk lamp, and indoor plants. Warm sunset lighting, cozy and mature aesthetic vibe.`;
+            if (sub === 'tk') promptTxt = `IMAGE PROMPT (TK SCHEDULE):\n${baseSetup}\n\n${layoutSchool}\n\nStyle: Cute 3D Pixar animation style. On the left and right sides of the background, place cute 3D characters of a little kindergarten boy and girl in school uniform. Decorate with adorable fluffy animals, rainbows, and blocks. Soft pastel lighting.`;
+            if (sub === 'sd') promptTxt = `IMAGE PROMPT (SD SCHEDULE):\n${baseSetup}\n\n${layoutSchool}\n\nStyle: 3D Pixar Adventure style. On the left and right sides, place cute 3D characters of an elementary school boy and girl in uniform. Decorate the background with glowing planets, space elements, and floating books. Vibrant deep blue and gold colors.`;
+            if (sub === 'smp') promptTxt = `IMAGE PROMPT (SMP SCHEDULE):\n${baseSetup}\n\n${layoutSchool}\n\nStyle: Cool pop-culture anime/comic style. On the sides, place 3D characters of a middle school boy and girl in neat school uniform. Decorate with dynamic urban elements, skateboards, and stylish geometric shapes. Bright energetic colors.`;
+            if (sub === 'sma') promptTxt = `IMAGE PROMPT (SMA SCHEDULE):\n${baseSetup}\n\n${layoutSchool}\n\nStyle: Aesthetic lo-fi study room style. On the sides, place stylized 3D characters of a high school boy and girl in neat uniform. Decorate with minimalist floating polaroid photos, coffee cups, and indoor plants. Warm sunset lighting, cozy aesthetic vibe.`;
         } 
         
         // 2. KATEGORI BISNIS
         else if (utama === 'bisnis') {
-            if (sub === 'bop') {
-                const layoutBOP = `CRITICAL LAYOUT: \n1. TOP: Write the title: "${judul}".\n2. MIDDLE: Draw an elegant dark schedule table with 7 rows. Write the days on the left side of the rows: "AHAD", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU". Leave the rest of the table blank.\n3. BOTTOM: Clearly write the quote: "${quote}".`;
-                promptTxt = `IMAGE PROMPT (BUSINESS SCHEDULE):\n${baseSetup}\n\n${layoutBOP}\n\nStyle: Modern luxury corporate design. Dark blue and gold accents, glowing futuristic city skyline in the background, sleek laptop and premium coffee cup on a marble desk. Studio lighting.`;
-            }
             if (sub === 'target') {
                 const layoutTarget = `CRITICAL LAYOUT: \n1. TOP: Write the title: "${judul}".\n2. MIDDLE: Draw exactly 12 blank rectangular boxes (without horizontal lines inside) arranged neatly. Label the boxes from "BULAN 1" to "BULAN 12".\n3. BOTTOM: Clearly write the quote: "${quote}".`;
                 promptTxt = `IMAGE PROMPT (12 MONTHS TARGET):\n${baseSetup}\n\n${layoutTarget}\n\nStyle: Premium executive goal-setting board. Rich dark grey and gold tones. A sophisticated office background with a glowing growth chart hologram. Highly motivational and luxurious.`;
@@ -229,13 +220,13 @@
 
         // 3. KATEGORI IBADAH
         else if (utama === 'ibadah') {
-            if (sub === 'imsakiyah') {
-                const layoutImsak = `CRITICAL LAYOUT: \n1. TOP: Write the title: "${judul}".\n2. MIDDLE: Draw a large empty table template with exactly 30 blank rows meant for the 30 days of Ramadhan. (Do not write the times, keep the rows empty for the user to write later).\n3. BOTTOM: Clearly write the quote: "${quote}".`;
-                promptTxt = `IMAGE PROMPT (IMSAKIYAH TEMPLATE):\n${baseSetup}\n\n${layoutImsak}\n\nStyle: Majestic Islamic aesthetic. Intricate gold geometric borders, glowing Moroccan lanterns hanging, soft silhouette of a beautiful mosque at sunset. Warm golden hour lighting.`;
-            }
             if (sub === 'mutabaah') {
-                const layoutMutabaah = `CRITICAL LAYOUT: \n1. TOP: Write the title: "${judul}".\n2. MIDDLE: Draw a clean checklist grid for daily worship routines (like Sholat 5 Waktu, Tilawah, Sedekah). Leave the grid empty.\n3. BOTTOM: Clearly write the quote: "${quote}".`;
-                promptTxt = `IMAGE PROMPT (MUTABAAH CHECKLIST):\n${baseSetup}\n\n${layoutMutabaah}\n\nStyle: Clean, pure, and elegant Islamic design. Emerald green and gold themes. A beautiful Quran and tasbih resting on a table in the background. Soft divine lighting.`;
+                const layoutMutabaah = `CRITICAL LAYOUT: \n1. TOP: Write the title: "${judul}".\n2. MIDDLE: Draw a clean checklist grid for daily worship routines. Write vertical columns for "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Ahad". Leave the checklist circles empty.\n3. BOTTOM: Clearly write the quote: "${quote}".`;
+                promptTxt = `IMAGE PROMPT (MARKETING LANGIT CHECKLIST):\n${baseSetup}\n\n${layoutMutabaah}\n\nStyle: Clean, pure, and elegant Islamic design. Emerald green and gold themes. A beautiful Quran and tasbih resting on a table in the background. Soft divine lighting, majestic and peaceful.`;
+            }
+            if (sub === 'imsakiyah') {
+                const layoutImsak = `CRITICAL LAYOUT: \n1. TOP: Write the title: "${judul}".\n2. MIDDLE: Draw a large empty table template with exactly 30 blank horizontal rows meant for the 30 days of Ramadhan. (Do not write the times, keep the rows empty for the user to write later).\n3. BOTTOM: Clearly write the quote: "${quote}".`;
+                promptTxt = `IMAGE PROMPT (IMSAKIYAH TEMPLATE):\n${baseSetup}\n\n${layoutImsak}\n\nStyle: Majestic Islamic aesthetic. Intricate gold geometric borders, glowing Moroccan lanterns hanging, soft silhouette of a beautiful mosque at sunset. Warm golden hour lighting.`;
             }
         }
         
